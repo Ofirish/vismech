@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Mechanics Visualization</title>
+    <link rel="stylesheet" href="lib/katex.min.css">
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <div class="page-header">
+            <h1>Interactive Mechanics Visualization</h1>
+            <p>Explore key mechanics concepts with interactive controls and real-time visualizations.</p>
+        </div>
+        
+        <section class="visualization-section" id="vectors-section">
+            <h2>Vectors (Force/Displacement)</h2>
+            <div class="section-content">
+                <div class="visualization-container" id="vectors-canvas"></div>
+                <div class="controls-container">
+                    <h3>Vector Controls</h3>
+                    <div class="control-group" id="vector-controls">
+                        <div class="control">
+                            <label class="control-label" for="vector-fx">Force X (Fₓ)</label>
+                            <div class="slider-container">
+                                <input type="range" id="vector-fx" class="slider" min="-10" max="10" value="5" step="0.1">
+                                <span class="slider-value" id="vector-fx-value">5</span>
+                            </div>
+                        </div>
+                        <div class="control">
+                            <label class="control-label" for="vector-fy">Force Y (Fᵧ)</label>
+                            <div class="slider-container">
+                                <input type="range" id="vector-fy" class="slider" min="-10" max="10" value="3" step="0.1">
+                                <span class="slider-value" id="vector-fy-value">3</span>
+                            </div>
+                        </div>
+                        <div class="control">
+                            <label class="control-label" for="vector-angle">Angle (θ)</label>
+                            <div class="slider-container">
+                                <input type="range" id="vector-angle" class="slider" min="0" max="360" value="30" step="1">
+                                <span class="slider-value" id="vector-angle-value">30°</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="formula-display" id="vector-formula"></div>
+            <div class="explanation">
+                <p>This visualization demonstrates vector representation, showing how a force vector can be broken down into its horizontal (Fₓ) and vertical (Fᵧ) components. The magnitude of the vector is calculated using the Pythagorean theorem, while the direction is determined by the arctangent of the ratio of vertical to horizontal components.</p>
+                <p>Adjust the sliders to see how changing the components affects the vector's magnitude and direction, or directly modify the angle to see how it changes the components. Click on any value to enter a specific number directly.</p>
+            </div>
+        </section>
+        
+        <section class="visualization-section" id="momentum-section">
+            <h2>Momentum (p = mv)</h2>
+            <div class="section-content">
+                <div class="visualization-container" id="momentum-canvas"></div>
+                <div class="controls-container">
+                    <h3>Momentum Controls</h3>
+                    <div class="control-group" id="momentum-controls">
+                        <div class="control">
+                            <label class="control-label" for="momentum-mass">Mass (m)</label>
+                            <div class="slider-container">
+                                <input type="range" id="momentum-mass" class="slider" min="1" max="10" value="2" step="0.1">
+                                <span class="slider-value" id="momentum-mass-value">2 kg</span>
+                            </div>
+                        </div>
+                        <div class="control">
+                            <label class="control-label" for="momentum-velocity">Velocity (v)</label>
+                            <div class="slider-container">
+                                <input type="range" id="momentum-velocity" class="slider" min="-10" max="10" value="5" step="0.1">
+                                <span class="slider-value" id="momentum-velocity-value">5 m/s</span>
+                            </div>
+                        </div>
+                        <div class="control">
+                            <label class="control-label" for="momentum-restitution">Coefficient of Restitution (e)</label>
+                            <div class="slider-container">
+                                <input type="range" id="momentum-restitution" class="slider" min="0" max="1" value="0.8" step="0.01">
+                                <span class="slider-value" id="momentum-restitution-value">0.8</span>
+                            </div>
+                        </div>
+                        <button id="momentum-reset" class="control-button">Reset Simulation</button>
+                    </div>
+                </div>
+            </div>
+            <div class="formula-display" id="momentum-formula"></div>
+            <div class="explanation">
+                <p>This simulation illustrates the concept of momentum, which is the product of an object's mass and velocity. The animation shows objects in motion and demonstrates conservation of momentum during collisions.</p>
+                <p>Adjust the mass and velocity to see how they affect the object's momentum. The coefficient of restitution controls how elastic the collisions are, with 1 being perfectly elastic (no energy loss) and 0 being completely inelastic (maximum energy loss). Click on any value to enter a specific number directly.</p>
+            </div>
+        </section>
+        
+        <section class="visualization-section" id="equilibrium-section">
+            <h2>Single-Point Equilibrium (ΣF = 0)</h2>
+            <div class="section-content">
+                <div class="visualization-container" id="equilibrium-canvas"></div>
+                <div class="controls-container">
+                    <h3>Equilibrium Controls</h3>
+                    <div class="control-group" id="equilibrium-controls">
+                        <div class="control">
+                            <label class="control-label" for="equilibrium-f1">Force 1 Magnitude (F₁)</label>
+                            <div class="slider-container">
+                                <input type="range" id="equilibrium-f1" class="slider" min="0" max="10" value="5" step="0.1">
+                                <span class="slider-value" id="equilibrium-f1-value">5 N</span>
+                            </div>
+                        </div>
+                        <div class="control">
+                            <label class="control-label" for="equilibrium-theta1">Force 1 Angle (θ₁)</label>
+                            <div class="slider-container">
+                                <input type="range" id="equilibrium-theta1" class="slider" min="0" max="360" value="0" step="1">
+                                <span class="slider-value" id="equilibrium-theta1-value">0°</span>
+                            </div>
+                        </div>
+                        <div class="control">
+                            <label class="control-label" for="equilibrium-f2">Force 2 Magnitude (F₂)</label>
+                            <div class="slider-container">
+                                <input type="range" id="equilibrium-f2" class="slider" min="0" max="10" value="5" step="0.1">
+                                <span class="slider-value" id="equilibrium-f2-value">5 N</span>
+                            </div>
+                        </div>
+                        <div class="control">
+                            <label class="control-label" for="equilibrium-theta2">Force 2 Angle (θ₂)</label>
+                            <div class="slider-container">
+                                <input type="range" id="equilibrium-theta2" class="slider" min="0" max="360" value="180" step="1">
+                                <span class="slider-value" id="equilibrium-theta2-value">180°</span>
+                            </div>
+                        </div>
+                        <button id="equilibrium-add-force" class="control-button">Add Force</button>
+                        <button id="equilibrium-remove-force" class="control-button">Remove Force</button>
+                    </div>
+                </div>
+            </div>
+            <div class="formula-display" id="equilibrium-formula"></div>
+            <div class="explanation">
+                <p>This visualization demonstrates the concept of equilibrium, where the sum of all forces acting on an object equals zero. When an object is in equilibrium, it remains at rest or moves with constant velocity.</p>
+                <p>Adjust the magnitude and direction of the forces to see how they affect the equilibrium state. For an object to be in equilibrium, both the sum of horizontal forces (ΣFₓ) and the sum of vertical forces (ΣFᵧ) must equal zero. Click on any value to enter a specific number directly.</p>
+            </div>
+        </section>
+        
+        <section class="visualization-section" id="stress-strain-section">
+            <h2>Stress/Strain (σ = F/A)</h2>
+            <div class="section-content">
+                <div class="visualization-container" id="stress-strain-canvas"></div>
+                <div class="controls-container">
+                    <h3>Stress/Strain Controls</h3>
+                    <div class="control-group" id="stress-strain-controls">
+                        <div class="control">
+                            <label class="control-label" for="stress-force">Force (F)</label>
+                            <div class="slider-container">
+                                <input type="range" id="stress-force" class="slider" min="0" max="1000" value="500" step="10">
+                                <span class="slider-value" id="stress-force-value">500 N</span>
+                            </div>
+                        </div>
+                        <div class="control">
+                            <label class="control-label" for="stress-area">Cross-sectional Area (A)</label>
+                            <div class="slider-container">
+                                <input type="range" id="stress-area" class="slider" min="10" max="100" value="50" step="1">
+                                <span class="slider-value" id="stress-area-value">50 mm²</span>
+                            </div>
+                        </div>
+                        <div class="control">
+                            <label class="control-label" for="stress-modulus">Young's Modulus (E)</label>
+                            <div class="slider-container">
+                                <input type="range" id="stress-modulus" class="slider" min="50" max="300" value="200" step="1">
+                                <span class="slider-value" id="stress-modulus-value">200 GPa</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="formula-display" id="stress-strain-formula"></div>
+            <div class="explanation">
+                <p>This visualization demonstrates the relationship between stress and strain in materials. Stress (σ) is the force per unit area, while strain (ε) is the proportional deformation of the material.</p>
+                <p>Adjust the force (F) and cross-sectional area (A) to see how they affect the stress. Young's modulus (E) represents the stiffness of the material and determines how much strain results from a given stress according to Hooke's Law: σ = E·ε. Click on any value to enter a specific number directly.</p>
+            </div>
+        </section>
+    </div>
+    
+    <!-- Floating Navigation Menu -->
+    <div class="floating-nav">
+        <a href="#vectors-section" class="nav-item">Vectors</a>
+        <a href="#momentum-section" class="nav-item">Momentum</a>
+        <a href="#equilibrium-section" class="nav-item">Equilibrium</a>
+        <a href="#stress-strain-section" class="nav-item">Stress/Strain</a>
+    </div>
+    
+    <!-- Libraries -->
+    <script src="lib/p5.min.js"></script>
+    <script src="lib/matter.min.js"></script>
+    <script src="lib/katex.min.js"></script>
+    
+    <!-- Custom Scripts -->
+    <script src="js/vector.js"></script>
+    <script src="js/momentum.js"></script>
+    <script src="js/equilibrium.js"></script>
+    <script src="js/stress-strain.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>
