@@ -271,6 +271,15 @@ let equilibriumSketch = function(p) {
   }
   
   function updateFormulaDisplay() {
+    if (forces.some(force => force.magnitude <= 0)) {
+      console.error("Error: Force magnitudes must be greater than zero.");
+      return;
+    }
+    if (forces.some(force => isNaN(force.angle))) {
+      console.error("Error: Invalid angle value.");
+      return;
+    }
+    
     // Calculate sum of forces in x and y directions
     let sumFx = 0;
     let sumFy = 0;

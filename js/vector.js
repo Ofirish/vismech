@@ -154,6 +154,10 @@ let vectorSketch = function(p) {
   }
   
   function updateVectorValues() {
+    if (isNaN(fx) || isNaN(fy)) {
+      console.error("Error: Invalid vector components.");
+      return;
+    }
     // Calculate magnitude and angle from components
     magnitude = Math.sqrt(fx * fx + fy * fy);
     angle = p.degrees(Math.atan2(fy, fx));

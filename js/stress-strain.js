@@ -46,26 +46,41 @@ let stressStrainSketch = function(p) {
     
     // Set up event listeners for sliders
     document.getElementById('stress-force').addEventListener('input', function() {
-      force = parseFloat(this.value);
+      let input = parseFloat(this.value);
+      if (isNaN(input) || input < 0) {
+        console.error("Invalid force value.");
+        return;
+      }
+      force = input;
       document.getElementById('stress-force-value').textContent = force + ' N';
       calculateStressStrain();
       resetAnimation();
     });
-    
+
     document.getElementById('stress-area').addEventListener('input', function() {
-      area = parseFloat(this.value);
+      let input = parseFloat(this.value);
+      if (isNaN(input) || input <= 0) {
+        console.error("Invalid area value.");
+        return;
+      }
+      area = input;
       document.getElementById('stress-area-value').textContent = area + ' mm²';
       calculateStressStrain();
       resetAnimation();
     });
-    
+
     document.getElementById('stress-modulus').addEventListener('input', function() {
-      youngsModulus = parseFloat(this.value);
+      let input = parseFloat(this.value);
+      if (isNaN(input) || input <= 0) {
+        console.error("Invalid Young's modulus value.");
+        return;
+      }
+      youngsModulus = input;
       document.getElementById('stress-modulus-value').textContent = youngsModulus + ' GPa';
       calculateStressStrain();
       resetAnimation();
     });
-    
+
     // Update formula display
     updateFormulaDisplay();
   };
@@ -75,10 +90,10 @@ let stressStrainSketch = function(p) {
 
     // Update animation
     if (animating) {
-        animationTime++;
-        if (animationTime >= animationDuration) {
-            animating = false;
-        }
+      animationTime++;
+      if (animationTime >= animationDuration) {
+        animating = false;
+      }
     }
 
     // Calculate current deformation based on animation time
@@ -90,7 +105,7 @@ let stressStrainSketch = function(p) {
 
     // Draw information
     drawInformation();
-};
+  };
   
   function resetAnimation() {
     animationTime = 0;
@@ -98,6 +113,14 @@ let stressStrainSketch = function(p) {
   }
   
   function calculateStressStrain() {
+    if (area === 0) {
+      console.error("Error: Area cannot be zero.");
+      return;
+    }
+    if (youngsModulus === 0) {
+      console.error("Error: Young's modulus cannot be zero.");
+      return;
+    }
     // Calculate stress (force / area)
     // Convert area from mm² to m²
     let areaInSquareMeters = area / 1000000;
@@ -128,105 +151,85 @@ let stressStrainSketch = function(p) {
   
   function drawStressStrainVisualization(animationProgress) {
     let currentElongation = elongation * animationProgress;
-  
+
     // Draw fixed support
-  p.push();
-  p.fill(100);
-  p.noStroke();
-  p.rect(width * 0.1 - 20, height * 0.4 - barHeight, 20, barHeight * 2);
-  p.pop();
-  
-  // Draw bar
-  p.push();
-  p.fill(52, 152, 219);
-  p.stroke(41, 128, 185);
-  p.strokeWeight(2);
-  p.rect(width * 0.1, height * 0.4 - barHeight/2, deformedLength, barHeight, 0, 5, 5, 0);
-  
-  // Draw original length indicator (dashed line)
-  p.stroke(150);
-  p.strokeWeight(1);
-  let dashLength = 5;
-  for (let x = width * 0.1; x < width * 0.1 + originalLength; x += dashLength * 2) {
-    p.line(x, height * 0.4 + barHeight/2 + 10, x + dashLength, height * 0.4 + barHeight/2 + 10);
-  }
-  p.pop();
-  
-  // Draw force arrow
-  p.push();
-  p.stroke(255, 0, 0);
-  p.strokeWeight(3);
-  p.fill(255, 0, 0);
-  
-  let arrowX = width * 0.1 + deformedLength;
-  let arrowY = height * 0.4;
-  let arrowLength = 50;
-  
-  // Draw line
-  p.line(arrowX, arrowY, arrowX + arrowLength, arrowY);
-  
-  // Draw arrowhead
-  let arrowSize = 10;
-  p.triangle(arrowX + arrowLength, arrowY, arrowX + arrowLength - arrowSize, arrowY - arrowSize/2, arrowX + arrowLength - arrowSize, arrowY + arrowSize/2);
-  
-  // Draw force label
-  p.noStroke();
-  p.textSize(16);
-  p.textAlign(p.CENTER);
-  p.text("F = " + force + " N", arrowX + arrowLength/2, arrowY - 15);
-  p.pop();
-  
-  // Draw area indicator
-  p.push();
-  p.stroke(0);
-  p.strokeWeight(1);
-  p.fill(0);
-  p.textSize(14);
-  p.textAlign(p.CENTER);
-  
-  // Draw area dimension lines
-  let areaX = width * 0.1 + deformedLength / 2;
-  let areaY = height * 0.4 - barHeight/2;
-  let areaHeight = barHeight;
-  let dimensionOffset = 20;
-  
-  // Vertical dimension
-  p.line(areaX + dimensionOffset, areaY, areaX + dimensionOffset, areaY + areaHeight);
-  p.line(areaX + dimensionOffset - 5, areaY, areaX + dimensionOffset + 5, areaY);
-  p.line(areaX + dimensionOffset - 5, areaY + areaHeight, areaX + dimensionOffset + 5, areaY + areaHeight);
-  
-  // Area label
-  p.text("A = " + area + " mm²", areaX + dimensionOffset + 30, areaY + areaHeight/2);
-  p.pop();
-  
-  // Draw elongation indicator
-  if (elongation > 0) {
     p.push();
-    p.stroke(0, 128, 0);
+    p.fill(100);
+    p.noStroke();
+    p.rect(width * 0.1 - 20, height * 0.4 - barHeight, 20, barHeight * 2);
+    p.pop();
+
+    // Draw bar
+    p.push();
+    p.fill(52, 152, 219);
+    p.stroke(41, 128, 185);
     p.strokeWeight(2);
-    p.fill(0, 128, 0);
+    p.rect(width * 0.1, height * 0.4 - barHeight / 2, deformedLength, barHeight, 0, 5, 5, 0);
+    p.pop();
+
+    // Draw original length indicator (dashed line)
+    p.push();
+    p.stroke(150);
+    p.strokeWeight(1);
+    let dashLength = 5;
+    for (let x = width * 0.1; x < width * 0.1 + originalLength; x += dashLength * 2) {
+      p.line(x, height * 0.4 + barHeight / 2 + 10, x + dashLength, height * 0.4 + barHeight / 2 + 10);
+    }
+    p.pop();
+
+    // Draw force arrow
+    p.push();
+    p.stroke(255, 0, 0);
+    p.strokeWeight(3);
+    p.fill(255, 0, 0);
+    let arrowX = width * 0.1 + deformedLength;
+    let arrowY = height * 0.4;
+    let arrowLength = 50;
+    let arrowSize = 10;
+    p.line(arrowX, arrowY, arrowX + arrowLength, arrowY);
+    p.triangle(arrowX + arrowLength, arrowY, arrowX + arrowLength - arrowSize, arrowY - arrowSize / 2, arrowX + arrowLength - arrowSize, arrowY + arrowSize / 2);
+    p.noStroke();
+    p.textSize(16);
+    p.textAlign(p.CENTER);
+    p.text("F = " + force + " N", arrowX + arrowLength / 2, arrowY - 15);
+    p.pop();
+
+    // Draw area indicator
+    p.push();
+    p.stroke(0);
+    p.strokeWeight(1);
+    let areaX = width * 0.1 + deformedLength / 2;
+    let areaY = height * 0.4 - barHeight / 2;
+    let areaHeight = barHeight;
+    let dimensionOffset = 20;
+    p.line(areaX + dimensionOffset, areaY, areaX + dimensionOffset, areaY + areaHeight);
+    p.line(areaX + dimensionOffset - 5, areaY, areaX + dimensionOffset + 5, areaY);
+    p.line(areaX + dimensionOffset - 5, areaY + areaHeight, areaX + dimensionOffset + 5, areaY + areaHeight);
+    p.noStroke();
     p.textSize(14);
     p.textAlign(p.CENTER);
-    
-    let deltaX = width * 0.1 + originalLength;
-    let deltaY = height * 0.4 + barHeight/2 + 30;
-    
-    // Calculate current elongation
-    let currentElongation = elongation * animationProgress;
-    
-    // Draw bracket
-    p.line(deltaX, deltaY - 5, deltaX, deltaY + 5);
-    p.line(deltaX + currentElongation, deltaY - 5, deltaX + currentElongation, deltaY + 5);
-    p.line(deltaX, deltaY, deltaX + currentElongation, deltaY);
-    
-    // Draw label
-    p.text("ΔL = " + (currentElongation / scaleFactor).toFixed(3) + " mm", deltaX + currentElongation/2, deltaY + 15);
+    p.text("A = " + area + " mm²", areaX + dimensionOffset + 30, areaY + areaHeight / 2);
     p.pop();
+
+    // Draw elongation indicator
+    if (elongation > 0) {
+      p.push();
+      p.stroke(0, 128, 0);
+      p.strokeWeight(2);
+      p.fill(0, 128, 0);
+      p.textSize(14);
+      p.textAlign(p.CENTER);
+      let deltaX = width * 0.1 + originalLength;
+      let deltaY = height * 0.4 + barHeight / 2 + 30;
+      p.line(deltaX, deltaY - 5, deltaX, deltaY + 5);
+      p.line(deltaX + currentElongation, deltaY - 5, deltaX + currentElongation, deltaY + 5);
+      p.line(deltaX, deltaY, deltaX + currentElongation, deltaY);
+      p.text("ΔL = " + (currentElongation / scaleFactor).toFixed(3) + " mm", deltaX + currentElongation / 2, deltaY + 15);
+      p.pop();
+    }
   }
-}
   
   function drawInformation() {
-    // Draw information text
     p.push();
     p.fill(0);
     p.noStroke();
@@ -239,19 +242,17 @@ let stressStrainSketch = function(p) {
   }
   
   function updateFormulaDisplay() {
-    // Update formula display using KaTeX
     let formulaElement = document.getElementById('stress-strain-formula');
-    if (!formulaElement) return; // Safety check
-    
-    // Calculate values for display
+    if (!formulaElement) return;
+
     let areaInSquareMeters = area / 1000000;
     let stressCalculation = force + " \\text{ N} \\div " + areaInSquareMeters.toExponential(2) + " \\text{ m}^2 = " + stress.toFixed(2) + " \\text{ MPa}";
     let strainCalculation = stress.toFixed(2) + " \\text{ MPa} \\div " + (youngsModulus * 1000) + " \\text{ MPa} = " + strain.toExponential(4);
-    
+
     let formula = `\\sigma = \\frac{F}{A} = ${stressCalculation} \\\\
-                  \\varepsilon = \\frac{\\sigma}{E} = ${strainCalculation} \\\\
-                  \\Delta L = \\varepsilon \\cdot L_0 = ${strain.toExponential(4)} \\cdot L_0`;
-    
+                   \\varepsilon = \\frac{\\sigma}{E} = ${strainCalculation} \\\\
+                   \\Delta L = \\varepsilon \\cdot L_0 = ${strain.toExponential(4)} \\cdot L_0`;
+
     try {
       katex.render(formula, formulaElement);
     } catch (e) {
@@ -260,19 +261,16 @@ let stressStrainSketch = function(p) {
     }
   }
   
-  // Handle window resize
   p.windowResized = function() {
     let container = document.getElementById('stress-strain-canvas');
     width = container.offsetWidth;
     height = container.offsetHeight;
     p.resizeCanvas(width, height);
-    
-    // Update bar dimensions
+
     barWidth = width * 0.6;
     barHeight = height * 0.2;
     originalLength = barWidth;
-    
-    // Recalculate values
+
     calculateStressStrain();
     resetAnimation();
   };

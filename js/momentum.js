@@ -42,13 +42,23 @@ let momentumSketch = function(p) {
     
     // Set up event listeners for sliders
     document.getElementById('momentum-mass').addEventListener('input', function() {
-      mass = parseFloat(this.value);
+      let input = parseFloat(this.value);
+      if (isNaN(input) || input <= 0) {
+        console.error("Invalid mass value.");
+        return;
+      }
+      mass = input;
       document.getElementById('momentum-mass-value').textContent = mass + ' kg';
       updateBall();
     });
     
     document.getElementById('momentum-velocity').addEventListener('input', function() {
-      velocity = parseFloat(this.value);
+      let input = parseFloat(this.value);
+      if (isNaN(input)) {
+        console.error("Invalid velocity value.");
+        return;
+      }
+      velocity = input;
       document.getElementById('momentum-velocity-value').textContent = velocity + ' m/s';
       updateBall();
     });
